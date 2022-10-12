@@ -33,7 +33,7 @@ class simplePromise {
     try {
       executionCallback(this.#onSuccessBinded, this.#onFailBinded);
     } catch (error) {
-      this.onFail(error);
+      this.#onFail(error);
     }
   }
 
