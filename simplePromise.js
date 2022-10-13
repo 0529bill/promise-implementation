@@ -6,14 +6,6 @@ new Promise((resolve, reject) => {
 }).then((onfullfilled, onrejected) => ... )
  */
 
-/**
- 
-then情境1 => 回傳非Promise
-ex, Promise.then(() =>  '11')
-then情境2 => 回傳非Promise
-ex, Promise.then(() =>  Promise('11'))
- */
-
 const STATE = {
   FULFILLED: "fulfilled",
   REJECTED: "rejected",
