@@ -156,14 +156,14 @@ class simplePromise {
 
   static all(promises) {
     const results = [];
-    const completedPromises = 0;
+    let completedPromises = 0;
     return new simplePromise((resolve, reject) => {
       for (let i = 0; i < promises.length; i++) {
         const promise = promises[i];
         promise
           .then((value) => {
             completedPromises++;
-            result[i] = value;
+            results[i] = value;
             if (completedPromises === promises.length) {
               resolve(results);
             }
@@ -176,7 +176,7 @@ class simplePromise {
   static allSettled(promises) {
     const results = [];
     let completedPromises = 0;
-    return new MyPromise((resolve) => {
+    return new simplePromise((resolve) => {
       for (let i = 0; i < promises.length; i++) {
         const promise = promises[i];
         promise
@@ -197,7 +197,7 @@ class simplePromise {
   }
 
   static race(promises) {
-    return new MyPromise((resolve, reject) => {
+    return new simplePromise((resolve, reject) => {
       promises.forEach((promise) => {
         promise.then(resolve).catch(reject);
       });
@@ -207,7 +207,7 @@ class simplePromise {
   static any(promises) {
     const errors = [];
     let rejectedPromises = 0;
-    return new MyPromise((resolve, reject) => {
+    return new simplePromise((resolve, reject) => {
       for (let i = 0; i < promises.length; i++) {
         const promise = promises[i];
         promise.then(resolve).catch((value) => {
@@ -234,4 +234,10 @@ export { simplePromise };
 /**
 JavaScript class property inside vs outside constructor
 https://stackoverflow.com/questions/64436532/javascript-class-property-inside-vs-outside-constructor
+ */
+
+/**
+all vs allSettled
+Promise.all will reject as soon as one of the Promises in the array rejects.
+Promise.allSettled will never reject, it will resolve once all Promises in the array have either rejected or resolved.
  */
