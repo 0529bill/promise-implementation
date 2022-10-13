@@ -1,13 +1,13 @@
 import { simplePromise } from "./simplePromise";
 
 describe("basic testing", () => {
-  it("single then", () => {
-    return new simplePromise((resolve, reject) => {
-      resolve(2);
-    }).then((v) => {
-      expect(v).toEqual(2);
-    });
-  });
+  // it("single then", () => {
+  //   return new simplePromise((resolve, reject) => {
+  //     resolve(2);
+  //   }).then((v) => {
+  //     expect(v).toEqual(2);
+  //   });
+  // });
 
   it("single catch ", () => {
     expect.assertions(1);

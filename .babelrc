@@ -1,0 +1,12 @@
+/**
+allow to use import in jest
+https://stackoverflow.com/questions/35756479/does-jest-support-es6-import-export
+*/
+
+{
+  "env": {
+    "test": {
+      "plugins": ["@babel/plugin-transform-modules-commonjs"]
+    }
+  }
+}
