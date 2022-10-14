@@ -13,7 +13,7 @@ const STATE = {
 };
 
 class simplePromise {
-  //private fields ( very new syntax) must be initialized outside of the constructor,
+  //private fields must be initialized outside of the constructor,
   #thenCallback = [];
   #catchCallback = [];
   #state = STATE.PENDING;
@@ -22,11 +22,19 @@ class simplePromise {
   #onFailBinded = this.#onFail.bind(this);
 
   constructor(executionCallback) {
+    if (typeof executionCallback !== "function") {
+      throw new TypeError("Promise is not a function!");
+    }
+
     try {
       executionCallback(this.#onSuccessBinded, this.#onFailBinded);
     } catch (error) {
       this.#onFail(error);
     }
+  }
+
+  #isPromise(value) {
+    return Boolean(value && typeof value.then === "function");
   }
 
   #runCallbacks = () => {
@@ -48,7 +56,8 @@ class simplePromise {
     queueMicrotask(() => {
       if (this.#state !== STATE.PENDING) return;
 
-      if (value instanceof simplePromise) {
+      //if it's resolving a promise, then pass onSuccess/onFail to it.
+      if (this.#isPromise(value)) {
         value.then(this.#onSuccessBinded, this.#onFailBinded);
         return;
       }
@@ -63,7 +72,7 @@ class simplePromise {
     queueMicrotask(() => {
       if (this.#state !== STATE.PENDING) return;
 
-      if (value instanceof simplePromise) {
+      if (this.#isPromise(value)) {
         value.then(this.#onSuccessBinded, this.#onFailBinded);
         return;
       }
@@ -92,13 +101,6 @@ class simplePromise {
         }
       });
 
-      //   if (thenCallback) {
-      //     this.#thenCallback.push(thenCallback);
-      //   }
-      //   if (catchCallback) {
-      //     this.#catchCallback.push(catchCallback);
-      //   }
-
       this.#catchCallback.push((result) => {
         if (!catchCb) {
           reject(result);
@@ -111,6 +113,7 @@ class simplePromise {
         }
       });
 
+      //避免已經resolve了，所以這裡call runCallback
       this.#runCallbacks();
     });
 
@@ -135,13 +138,13 @@ class simplePromise {
   }
 
   static resolve(value) {
-    return new Promise((resolve) => {
+    return new simplePromise((resolve) => {
       resolve(value);
     });
   }
 
   static reject(value) {
-    return new Promise((resolve, reject) => {
+    return new simplePromise((resolve, reject) => {
       reject(value);
     });
   }
@@ -232,4 +235,9 @@ https://stackoverflow.com/questions/64436532/javascript-class-property-inside-vs
 all vs allSettled
 Promise.all will reject as soon as one of the Promises in the array rejects.
 Promise.allSettled will never reject, it will resolve once all Promises in the array have either rejected or resolved.
+ */
+
+/**
+ class static keyword: Static methods are called directly on the class  - without creating an instance/object.
+ Static methods are called directly on the class (Car from the example above) - without creating an instance/object (mycar) of the class.
  */
